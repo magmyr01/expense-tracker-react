@@ -1,0 +1,17 @@
+.total {
+    margin: auto;
+    width: fit-content;
+    height: 40px;
+}
+
+.total-number {
+    font-weight: bold;
+}
+
+.total-income {
+    color: green;
+}
+
+.total-expense {
+    color: red;
+}

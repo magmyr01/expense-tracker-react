@@ -1,0 +1,10 @@
+.details-container {
+    box-shadow: 3px 3px 3px 3px gray;
+    height: 230px;
+}
+
+.vl {
+    border-left:2px solid gray;
+    height:100%;
+    width:1px;
+}

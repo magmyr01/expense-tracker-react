@@ -1,0 +1,19 @@
+.new-expense-container {
+    flex:1;
+    height:100px;
+    display:flex;
+    flex-direction: column;
+}
+
+.label-style{
+    width:70px;
+}
+
+.input-style{
+    flex:1;
+}
+
+.add-btn {
+    width:fit-content;
+    margin:auto;
+}
