@@ -1,34 +1,40 @@
 import styles from './NewExpense.module.css';
-import { useState } from "react";
+import { useForm } from 'react-hook-form';
+import { useEffect } from "react";
 
 const NewExpense = ({onAddExpense, lastId}) => {
-    const [formData, setFormData] = useState({
+    useEffect(() => {
+        if (isSubmitSuccessful ) {
+            reset({
+                id: 0,
+                name: "",
+                type: "Select a type",
+                amount: 0
+            })
+        }
+    })
+    const { register,
+            handleSubmit,
+            reset,
+            formState: { isSubmitSuccessful, errors }
+    } = useForm({
         id: 0,
         name: "",
         type: "Select a type",
         amount: 0
     });
 
-    const handleForm = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        })
-    }
-
-    const handleClick = () => {
+    const onSubmit = (data) => {
         const expense = {
-            ...formData,
-            amount: Number(formData.amount),
+            ...data,
+            amount: Number(data.amount),
             id: lastId + 1
         }
-
-        setFormData(expense);
         onAddExpense(expense);
     }
 
     return (
-        <form className={`container ${styles["new-expense-container"]}`}>
+        <form onSubmit={handleSubmit(onSubmit)} className={`container ${styles["new-expense-container"]}`}>
             <h3>Add new expense</h3>
             <div className={"row g-3 align-items-center"}>
                 <div className={styles["label-style"]}>
@@ -37,9 +43,8 @@ const NewExpense = ({onAddExpense, lastId}) => {
                 <div className={styles["input-style"]}>
                     <select
                         name="type"
-                        value={formData.type}
                         className={"form-select"}
-                        onChange={handleForm}
+                        {...register("type")}
                         aria-label={"Select expense type"}>
                         <option value="default" hidden={true}>Select a type</option>
                         <option value="expense">Expense</option>
@@ -54,11 +59,16 @@ const NewExpense = ({onAddExpense, lastId}) => {
                 <div className={styles["input-style"]}>
                     <input
                         type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleForm}
                         id={"new-expense-name"}
+                        {...register("name", {
+                            required: "Name is required"
+                        })}
                         className={"form-control"}/>
+                    {errors.name && (
+                        <span className={`${styles["error-message"]}`}>-
+                            {errors.name.message}
+                        </span>
+                    )}
                 </div>
             </div>
             <div className={"row g-3 align-items-center"}>
@@ -68,15 +78,20 @@ const NewExpense = ({onAddExpense, lastId}) => {
                 <div style={{flex: 1}}>
                     <input
                         type={"number"}
-                        name="amount"
-                        value={formData.amount}
-                        onChange={handleForm}
                         id={"new-expense-amount"}
-                        className={"form-control"}/>
+                        className={"form-control"}
+                        {...register("amount", {
+                            required: "Amount is required"
+                        })} />
+                    {errors.amount && (
+                        <span className={`${styles["error-message"]}`}>-
+                            {errors.amount.message}
+                        </span>
+                    )}
                 </div>
             </div>
 
-            <button type={"button"} onClick={handleClick} className={`btn btn-primary ${styles["add-btn"]}`}>Add</button>
+            <button type={"submit"} className={`btn btn-primary ${styles["add-btn"]}`}>Add</button>
         </form>
     )
 }
