@@ -1,75 +1,70 @@
-import { useState } from "react";
+import {useState} from "react";
 import './App.css'
 import Balance from "./components/Balance";
 import Details from "./components/Details";
 
 let expenseList = [
-  {
-    id: 1,
-    name: "rent",
-    amount: 8300,
-    type: "expense"
-  },
-  {
-    id: 2,
-    name: "food",
-    amount: 6000,
-    type: "expense"
-  },
-  {
-    id: 3,
-    name: "Salary",
-    amount: 30000,
-    type: "income"
-  }
+    {
+        id: 1,
+        name: "rent",
+        amount: 8300,
+        expenseType: "expense"
+    },
+    {
+        id: 2,
+        name: "food",
+        amount: 6000,
+        expenseType: "expense"
+    },
+    {
+        id: 3,
+        name: "Salary",
+        amount: 30000,
+        expenseType: "income"
+    }
 ];
 
 function App() {
-  const [expenses, setExpenses] = useState(expenseList);
+    const [expenses, setExpenses] = useState(expenseList);
 
-  const addExpense = (expense) => {
-    setExpenses(prev => [...prev, expense]);
-  };
+    const addExpense = (expense) => {
+        setExpenses(prev => [
+            ...prev,
+            {
+                ...expense,
+                id: crypto.randomUUID()
+            }
+        ]);
+    };
 
-  const getTotalExpenses = () => {
-    let total = 0;
-    expenses.filter(x => x.type === "expense").forEach(x => total += x.amount);
+    const reduceExpense = (acc, expense) => acc += expense.amount;
 
-    return total;
-  }
+    const totalIncome = expenses
+        .filter(x => x.expenseType === "income")
+        .reduce(reduceExpense, 0);
 
-  const getTotalIncome = () => {
-    let total = 0;
-    expenses.filter(x => x.type === "income").forEach(x => total += x.amount);
+    const totalExpenses = expenses
+        .filter(x => x.expenseType === "expense")
+        .reduce(reduceExpense, 0);
 
-    return total;
-  }
+    const balance = expenses.reduce((acc, item) => {
+        if (item.expenseType === "expense") {
+            return acc - item.amount;
+        } else {
+            return acc + item.amount;
+        }
+    }, 0);
 
-  const getBalance = () => {
-    let bal = 0;
-
-    for(let entry of expenses) {
-      if(entry.type === "income") {
-        bal += entry.amount;
-      }
-      else if(entry.type === "expense") {
-        bal -= entry.amount;
-      }
-    }
-
-    return bal;
-  }
-
-  return (
-    <>
-      <div className='title-text'>
-        <h1>Expense tracker app</h1>
-        <Balance balance={getBalance()} totalIncome={getTotalIncome()} totalExpense={getTotalExpenses()} />
-        <br />
-        <Details expenseList={expenses} onAddExpense={addExpense} lastId={expenses[expenses.length - 1].id}/>
-      </div>
-    </>
-  )
+    return (
+        <>
+            <div className='title-text'>
+                <h1>Expense tracker app</h1>
+                <Balance balance={balance} totalIncome={totalIncome} totalExpense={totalExpenses}/>
+                <br/>
+                <Details expenseList={expenses} onAddExpense={addExpense}/>
+            </div>
+        </>
+    )
 }
 
 export default App

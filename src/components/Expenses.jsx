@@ -1,9 +1,9 @@
-import styles from './Expenses.module.css';
 import ExpenseToIcon from "./ExpenseToIcon.jsx";
+import ExpenseItem from "./ExpenseItem.jsx";
 
 const Expenses = ({expenseList}) => {
     return (
-        <table className={"table table-hover"} style={{flex:2}}>
+        <table className={"table table-hover"} style={{flex: 2}}>
             <thead>
             <tr>
                 <th>Id</th>
@@ -13,15 +13,10 @@ const Expenses = ({expenseList}) => {
             </tr>
             </thead>
             <tbody>
-            {
-                expenseList.map(expense => (
-                    <tr key={expense.id}>
-                        <td>{expense.id}</td>
-                        <td>{expense.name}</td>
-                        <td>{expense.amount}</td>
-                        <td><ExpenseToIcon entryType={expense.type} /></td>
-                    </tr>
-                ))
+            {expenseList.map(expense => (
+                <ExpenseItem key={expense.id}
+                             expense={expense}/>
+            ))
             }
             </tbody>
         </table>

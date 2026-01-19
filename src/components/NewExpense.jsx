@@ -2,35 +2,35 @@ import styles from './NewExpense.module.css';
 import { useForm } from 'react-hook-form';
 import { useEffect } from "react";
 
-const NewExpense = ({onAddExpense, lastId}) => {
+const NewExpense = ({onAddExpense}) => {
+    const { register,
+        handleSubmit,
+        reset,
+        formState: { isSubmitSuccessful, errors }
+    } = useForm({
+        defaultValues: {
+            name: "",
+            expenseType: "Select a type",
+            amount: 0
+        }
+    });
+
     useEffect(() => {
         if (isSubmitSuccessful ) {
             reset({
-                id: 0,
                 name: "",
-                type: "Select a type",
+                expenseType: "Select a type",
                 amount: 0
             })
         }
-    })
-    const { register,
-            handleSubmit,
-            reset,
-            formState: { isSubmitSuccessful, errors }
-    } = useForm({
-        id: 0,
-        name: "",
-        type: "Select a type",
-        amount: 0
-    });
+    }, [isSubmitSuccessful, reset]);
 
     const onSubmit = (data) => {
-        const expense = {
+        const expenseWithoutId = {
             ...data,
-            amount: Number(data.amount),
-            id: lastId + 1
+            amount: Number(data.amount)
         }
-        onAddExpense(expense);
+        onAddExpense(expenseWithoutId);
     }
 
     return (
@@ -42,14 +42,21 @@ const NewExpense = ({onAddExpense, lastId}) => {
                 </div>
                 <div className={styles["input-style"]}>
                     <select
-                        name="type"
+                        name="expenseType"
                         className={"form-select"}
-                        {...register("type")}
+                        {...register("expenseType", {
+                            required: "Type is required"
+                        })}
                         aria-label={"Select expense type"}>
                         <option value="default" hidden={true}>Select a type</option>
                         <option value="expense">Expense</option>
                         <option value="income">Income</option>
                     </select>
+                    {errors.expenseType && (
+                        <span className={`${styles["error-message"]}`}>-
+                            {errors.expenseType.message}
+                        </span>
+                    )}
                 </div>
             </div>
             <div className={"row g-3 align-items-center"}>
