@@ -1,7 +1,7 @@
 import ExpenseToIcon from "./ExpenseToIcon.jsx";
 import ExpenseItem from "./ExpenseItem.jsx";
 
-const Expenses = ({expenseList}) => {
+const Expenses = ({expenseList, onDeleteExpense}) => {
     return (
         <table className={"table table-hover"} style={{flex: 2}}>
             <thead>
@@ -10,12 +10,12 @@ const Expenses = ({expenseList}) => {
                 <th>Name</th>
                 <th>Amount</th>
                 <th>Type</th>
+                <th>Actions</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="animate-container">
             {expenseList.map(expense => (
-                <ExpenseItem key={expense.id}
-                             expense={expense}/>
+                <ExpenseItem key={expense.id} expense={expense} onDeleteExpense={onDeleteExpense}/>
             ))
             }
             </tbody>

@@ -1,8 +1,13 @@
 .new-expense-container {
     flex:1;
-    height:100px;
+    height:300px;
     display:flex;
     flex-direction: column;
+}
+
+.new-expense-row {
+    height: auto;
+    margin:3px;
 }
 
 .label-style{

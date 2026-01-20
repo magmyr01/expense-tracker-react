@@ -1,6 +1,6 @@
 import styles from './NewExpense.module.css';
 import { useForm } from 'react-hook-form';
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 
 const NewExpense = ({onAddExpense}) => {
     const { register,
@@ -33,10 +33,12 @@ const NewExpense = ({onAddExpense}) => {
         onAddExpense(expenseWithoutId);
     }
 
+    console.log("Rerendering of new expense component")
+
     return (
         <form onSubmit={handleSubmit(onSubmit)} className={`container ${styles["new-expense-container"]}`}>
             <h3>Add new expense</h3>
-            <div className={"row g-3 align-items-center"}>
+            <div className={`row align-items-center ${styles["new-expense-row"]}`}>
                 <div className={styles["label-style"]}>
                     <label htmlFor={"new-expense-name"} className={"col-form-label"}>Type:</label>
                 </div>
@@ -59,12 +61,13 @@ const NewExpense = ({onAddExpense}) => {
                     )}
                 </div>
             </div>
-            <div className={"row g-3 align-items-center"}>
+            <div className={`row align-items-center ${styles["new-expense-row"]}`}>
                 <div className={styles["label-style"]}>
                     <label htmlFor={"new-expense-name"} className={"col-form-label"}>Name:</label>
                 </div>
                 <div className={styles["input-style"]}>
                     <input
+                        autoComplete="off"
                         type="text"
                         id={"new-expense-name"}
                         {...register("name", {
@@ -78,7 +81,7 @@ const NewExpense = ({onAddExpense}) => {
                     )}
                 </div>
             </div>
-            <div className={"row g-3 align-items-center"}>
+            <div className={`row align-items-center ${styles["new-expense-row"]}`}>
                 <div style={{width: '70px'}}>
                     <label htmlFor={"new-expense-amount"} className={"col-form-label"}>Amount:</label>
                 </div>
@@ -103,4 +106,5 @@ const NewExpense = ({onAddExpense}) => {
     )
 }
 
-export default NewExpense;
+const NewExpenseMemo = React.memo(NewExpense);
+export { NewExpenseMemo };

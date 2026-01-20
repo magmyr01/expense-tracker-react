@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useMemo, useState, useCallback} from "react";
 import './App.css'
 import Balance from "./components/Balance";
 import Details from "./components/Details";
@@ -27,7 +27,7 @@ let expenseList = [
 function App() {
     const [expenses, setExpenses] = useState(expenseList);
 
-    const addExpense = (expense) => {
+    const addExpense = useCallback((expense) => {
         setExpenses(prev => [
             ...prev,
             {
@@ -35,25 +35,35 @@ function App() {
                 id: crypto.randomUUID()
             }
         ]);
+    }, []);
+
+    const deleteExpense = (id) => {
+        setExpenses(prev => prev.filter(x => x.id !== id));
     };
 
     const reduceExpense = (acc, expense) => acc += expense.amount;
 
-    const totalIncome = expenses
-        .filter(x => x.expenseType === "income")
-        .reduce(reduceExpense, 0);
+    const totalIncome = useMemo(() => {
+        return expenses
+            .filter(x => x.expenseType === "income")
+            .reduce(reduceExpense, 0)
+    }, [expenses]);
 
-    const totalExpenses = expenses
-        .filter(x => x.expenseType === "expense")
-        .reduce(reduceExpense, 0);
+    const totalExpenses = useMemo(() => {
+        return expenses
+            .filter(x => x.expenseType === "expense")
+            .reduce(reduceExpense, 0)
+    }, [expenses]);
 
-    const balance = expenses.reduce((acc, item) => {
-        if (item.expenseType === "expense") {
-            return acc - item.amount;
-        } else {
-            return acc + item.amount;
-        }
-    }, 0);
+    const balance = useMemo(() => {
+        return expenses.reduce((acc, item) => {
+            if (item.expenseType === "expense") {
+                return acc - item.amount;
+            } else {
+                return acc + item.amount;
+            }
+        }, 0)
+    }, [expenses]);
 
     return (
         <>
@@ -61,7 +71,7 @@ function App() {
                 <h1>Expense tracker app</h1>
                 <Balance balance={balance} totalIncome={totalIncome} totalExpense={totalExpenses}/>
                 <br/>
-                <Details expenseList={expenses} onAddExpense={addExpense}/>
+                <Details expenseList={expenses} onAddExpense={addExpense} onDeleteExpense={deleteExpense}/>
             </div>
         </>
     )

@@ -2,7 +2,7 @@ import styles from './Balance.module.css';
 
 const Balance = ({ balance, totalIncome, totalExpense }) => {
     return (
-        <div className="row" style={{ boxShadow: "3px 3px 3px 3px gray", width: "400px", margin: "auto" }}>
+        <div className={`row ${styles["balance-container"]}`}>
             <h2>Balance: {balance}</h2>
             <div className="row">
                 <div className="col">
